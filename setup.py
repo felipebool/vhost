@@ -12,6 +12,7 @@ setup(
     download_url='https://www.github.com/felipebool/vhost/archive/0.1.0.tar.gz',
     packages=['vhost'],
     license='MIT',
+    python_requires='>=3.6'
     entry_points={
         'console_scripts': [
             'vhost = vhost.__main__:main'
