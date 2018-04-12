@@ -9,7 +9,7 @@ setup(
     author='Felipe Lopes',
     author_email='bolzin@gmail.com',
     url='https://www.github.com/felipebool/vhost',
-    download_url='https://www.github.com/felipebool/vhost/archive/0.1.0.tar.gz',
+    download_url='https://www.github.com/felipebool/vhost/archive/0.1.1.tar.gz',
     packages=['vhost'],
     license='MIT',
     python_requires='>=3',
