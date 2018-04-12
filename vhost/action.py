@@ -11,7 +11,8 @@ def check_availability(name):
     if not name:
         return False
 
-    return not os.path.exists('/etc/apache2/sites-available/' + name + '.conf')
+    config_file = '/etc/apache2/sites-available/{}.conf'.format(name)
+    return not os.path.exists(config_file)
 
 def check_arguments(args):
     errors = []
@@ -23,20 +24,20 @@ def check_arguments(args):
         errors.append('- you must specify a host name using -n, --name options')
 
     if not check_server(args.server):
-        errors.append(f'- {args.server} server is not installed')
+        errors.append('- {} server is not installed'.format(args.server))
 
     if not check_availability(args.name):
-        errors.append(f'- host {args.name} is not available')
+        errors.append('- host {} is not available'.format(args.server))
 
     try:
         pwd.getpwnam(args.user)
     except KeyError:
-        errors.append(f'- user {args.user} does not exist')
+        errors.append('- user {} does not exist'.format(args.user))
 
     return errors
 
 def create_host_directory(name, user):
-    host_dir = f'/var/www/{name}'
+    host_dir = '/var/www/{}'.format(name)
     document_root = host_dir + '/public_html'
 
     try:
@@ -51,32 +52,33 @@ def create_host_directory(name, user):
 
         os.chown(document_root, uid, gid)
     except FileExistsError:
-        exit(f'Error: {host_dir} already exists')
+        exit('Error: {} already exists'.format(host_dir))
 
 def create_configuration_file(name):
-    config = open(f'/etc/apache2/sites-available/{name}.conf', 'w+')
+    config_file = '/etc/apache2/sites-available/{}.conf'.format(name)
+    config = open(config_file, 'w+')
 
     # this could be better...
-    content = f'''<VirtualHost *:80>
-    ServerAdmin webmaster@{name}
-    ServerName {name}
-    ServerAlias www.{name}
-    DocumentRoot /var/www/{name}/public_html
+    content = '''<VirtualHost *:80>
+    ServerAdmin webmaster@{}
+    ServerName {}
+    ServerAlias www.{}
+    DocumentRoot /var/www/{}/public_html
 
-    <Directory /var/www/{name}/public_html>
+    <Directory /var/www/{}/public_html>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
     </Directory>
                                                                                  
     ErrorLog ${{APACHE_LOG_DIR}}/error.log
     CustomLog ${{APACHE_LOG_DIR}}/access.log combined
-</Virtualhost>\n'''
+</Virtualhost>\n'''.format(name, name, name, name, name)
 
     config.write(content)
 
 def enable_host(name):
-    src = f'/etc/apache2/sites-available/{name}.conf'
-    dst = f'/etc/apache2/sites-enabled/{name}.conf'
+    src = '/etc/apache2/sites-available/{}.conf'.format(name)
+    dst = '/etc/apache2/sites-enabled/{}.conf'.format(name)
 
     os.symlink(src, dst)
 

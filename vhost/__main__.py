@@ -36,7 +36,7 @@ def main():
 
     create_host(args)
 
-    print(f'Please, restart {args.server}')
+    print('Please, restart {}'.format(args.server))
 
 if __name__ == '__main__':
     main()
